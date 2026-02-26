@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=80.7.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crm-api-automation"
+version = "0.1.0"   # zunxun语义化版本规范： 主版本.此版本.修订号
+description = "CRM系统接口自动化测试框架"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pytest>=9.0.0",
+    "requests>=2.32.0",
+    "pydantic>=2.3.0",
+    "pydantic-settings>=2.13.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
