@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
 	"""全局配置管理（Pydantic 模型化）"""
 	# 基础环境配置
-	base_url: str = "https://api.mock-crm.com/v1"
+	base_url: str = "https://jsonplaceholder.typicode.com"
 	timeout: int = 10
 	
 	# 日志配置
