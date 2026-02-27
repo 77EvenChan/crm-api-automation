@@ -10,6 +10,10 @@ class Settings(BaseSettings):
 	# 日志配置
 	log_level: str = "INFO"
 	
+	# 业务核心账号配置
+	admin_username: str = "admin"
+	admin_password: str = "123456"
+	
 	# 忽略额外的环境变量加载，支持后期平滑接入 .env
 	model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 	
