@@ -26,3 +26,4 @@ target-version = "py310"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "-v -s --alluredir=./allure-results --clean-alluredir"

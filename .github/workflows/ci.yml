@@ -1,0 +1,29 @@
+name: crm-api-automation
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  test:
+    runs-on:  ubuntu-latest
+
+    steps:
+      - name: 1. 拉取最新代码
+        uses: actions/checkout@v3
+
+      - name: 2. 初始化 Python 3.10 环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: 3. 安装项目依赖（基于pyproject.toml）
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
+
+      - name: 4. 执行 API自动化测试左移验证
+        run: |
+          pytest

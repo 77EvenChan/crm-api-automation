@@ -19,5 +19,6 @@ venv/
 build/
 
 note/
-
+allure-results/
+crm_api_automation.egg-info/
 
