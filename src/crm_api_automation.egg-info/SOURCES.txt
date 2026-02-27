@@ -1,0 +1,17 @@
+README.md
+pyproject.toml
+src/crm_api/__init__.py
+src/crm_api/api/__init__.py
+src/crm_api/api/auth_api.py
+src/crm_api/api/customer_api.py
+src/crm_api/config/__init__.py
+src/crm_api/config/settings.py
+src/crm_api/core/__init__.py
+src/crm_api/core/exceptions.py
+src/crm_api/core/http_client.py
+src/crm_api/core/logger.py
+src/crm_api_automation.egg-info/PKG-INFO
+src/crm_api_automation.egg-info/SOURCES.txt
+src/crm_api_automation.egg-info/dependency_links.txt
+src/crm_api_automation.egg-info/requires.txt
+src/crm_api_automation.egg-info/top_level.txt

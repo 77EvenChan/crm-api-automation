@@ -16,5 +16,8 @@ venv/
 # Pycharm
 .idea/
 *.iml
+build/
 
 note/
+
+

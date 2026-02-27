@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: crm-api-automation
+Version: 0.1.0
+Summary: CRM系统接口自动化测试框架
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: pytest>=9.0.0
+Requires-Dist: requests>=2.32.0
+Requires-Dist: pydantic>=2.3.0
+Requires-Dist: pydantic-settings>=2.13.0
+Requires-Dist: requests-mock>=1.12.0
