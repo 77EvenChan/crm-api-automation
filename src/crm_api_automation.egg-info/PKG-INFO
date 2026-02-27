@@ -9,3 +9,4 @@ Requires-Dist: requests>=2.32.0
 Requires-Dist: pydantic>=2.3.0
 Requires-Dist: pydantic-settings>=2.13.0
 Requires-Dist: requests-mock>=1.12.0
+Requires-Dist: allure-pytest>=2.15.0

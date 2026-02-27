@@ -2,14 +2,20 @@ import pytest
 from src.crm_api.core.http_client import http_client
 from src.crm_api.api.customer_api import CustomerAPI
 from src.crm_api.core.logger import log
+import allure
 
+@allure.epic("CRM 系统自动化测试")
+@allure.feature("客户管理模块")
 class TestCustomerManagement:
 	"""业务测试类：CRM - 客户管理模块核心流程验证"""
 	def setup_method(self) -> None:
 		"""每个测试方法前初始化API对象"""
 		self.customer_api = CustomerAPI(http_client)
 		log.info("开始执行客户管理业务用例")
-		
+	
+	@allure.story("创建企业客户")
+	@allure.title("数据驱动验证：{expect_msg}")
+	@allure.severity(allure.severity_level.CRITICAL)
 	@pytest.mark.parametrize(
 		"customer_name, contact_phone, industry, expect_code, expect_msg, is_success",[
 			# 用例1：正向路径 - 正常创建企业客户
@@ -21,25 +27,19 @@ class TestCustomerManagement:
 	)
 	def test_create_customer_data_driver(self, customer_name: str, contact_phone: str, industry: str, expect_code: int, expect_msg: str, is_success: bool) -> None:
 		"""数据驱动测试：验证创建客户接口的正向与逆向业务逻辑"""
-		log.info(f"用例参数注入 -> 企业名称：{customer_name}, 行业：{industry}")
+		with allure.step("1. 组装测试数据并发起请求"):
+			log.info(f"用例参数注入 -> 企业名称: {customer_name}, 行业: {industry}")
+			res = self.customer_api.create_customer(customer_name, contact_phone, industry)
 		
-		# 发起业务调用
-		resp = self.customer_api.create_customer(
-			customer_name=customer_name,
-			contact_phone=contact_phone,
-			industry=industry
-		)
+		with allure.step(f"2. 校验业务响应码应为 {expect_code}"):
+			assert res["code"] == expect_code, f"业务响应码错误: 期望 {expect_code}, 实际 {res['code']}"
+			assert res["msg"] == expect_msg, f"业务提示信息不匹配: 期望 {expect_msg}, 实际 {res['msg']}"
 		
-		# 多重业务断言
-		assert resp['code'] == expect_code, f"业务响应码错误：期望{expect_code}，实际{resp['code']}"
-		assert resp['msg'] == expect_msg, f"业务提示信息不匹配：实际为{resp['msg']}"
-		
-		# 核心流转字段断言
-		if is_success:
-			assert resp['data']['customer_id'].startswith("CUST_"), "客户ID生成规则校验失败"
-			assert resp['data']['status'] == "INIT", "新创建的客户状态必须为INIT"
-			log.info(f"断言通过：成功创建客户，ID为{resp['data']['customer_id']}")
-		
-		else:
-			assert resp['data'] is None, "异常流转时，data字段必须为空以防数据泄露"
-			log.info("断言通过：系统正确拦截了重复创建请求")
+		with allure.step("3. 校验状态流转与数据落盘"):
+			if is_success:
+				assert res["data"]["customer_id"].startswith("CUST_")
+				assert res["data"]["status"] == "INIT"
+				log.info(f"断言通过: 成功创建客户，ID为 {res['data']['customer_id']}")
+			else:
+				assert res["data"] is None
+				log.info("断言通过: 系统正确拦截了重复创建请求")

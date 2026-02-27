@@ -15,3 +15,4 @@ src/crm_api_automation.egg-info/SOURCES.txt
 src/crm_api_automation.egg-info/dependency_links.txt
 src/crm_api_automation.egg-info/requires.txt
 src/crm_api_automation.egg-info/top_level.txt
+tests/test_customer.py

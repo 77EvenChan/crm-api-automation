@@ -1,0 +1,10 @@
+[32mINFO    [0m crm-api-automation:test_customer.py:14 开始执行客户管理业务用例
+[32mINFO    [0m crm-api-automation:test_customer.py:31 用例参数注入 -> 企业名称: 重复企业有限公司, 行业: 金融
+[32mINFO    [0m crm-api-automation:http_client.py:53 请求发起：POST /customers
+[32mINFO    [0m crm-api-automation:http_client.py:54 请求地址：https://jsonplaceholder.typicode.com/customers
+[32mINFO    [0m crm-api-automation:http_client.py:58 请求数据（JSON）：{'customer_name': '重复企业有限公司', 'contact_phone': '13900139000', 'industry': '金融'}
+[32mINFO    [0m crm-api-automation:http_client.py:72 响应状态码：200 | 耗时：0.000s
+[32mINFO    [0m crm-api-automation:http_client.py:76 响应数据：{"code": 40900, "msg": "企业已存在", "data": null}
+[32mINFO    [0m crm-api-automation:http_client.py:81 请求结束！
+[32mINFO    [0m crm-api-automation:test_customer.py:45 断言通过: 系统正确拦截了重复创建请求
+[32mINFO    [0m crm-api-automation:conftest.py:63 【Fixture销毁】测试会话结束
