@@ -48,27 +48,22 @@ crm-api-automation/
 └── pyproject.toml                  # 现代 Python 项目核心依赖与工具链配置
 ```
 
-💻 快速启动指南
-1. 环境准备
-建议使用python3.10及以上版本并创建虚拟环境：
-```Bash
-python -m venv venv
-venv/Scripts/activate
-```
-2. 极速安装依赖
-本项目采用现代化的pyproject.toml，摒弃了过时的requirements.txt
-```Bash
-pip install -e .
-(推荐上面的命令)，或者
-pip install .
-```
-3. 运行测试并生成报告
-```Bash
-# 执行业务用例，并收集Allure原始数据
-pytest tests/ -v -s --alluredir=./allure-results
+💻 一键交付与运行体验
+方案 A：本地纯净 Python 运行
 
-# (可选) 如果本地已安装Allure命令行工具，可以直接启动报告服务
-allure serve ./allure-results
 ```Bash
+# 1. 初始化依赖 (现代构建标准)
+pip install .
+
+# 2. 触发自动化引擎并收集企业级日志数据
+pytest -v -s --alluredir=./allure-results
+```
+方案 B：DevOps 容器化运行（强烈推荐）
+在任何安装了 Docker 的服务器上，无需配置 Python 环境，一行命令拉起自动化测试
+```Bash
+docker-compose up --build
+(容器将在秒级完成构建并执行测试，最终将报告结果挂载映射到宿主机的 allure-results 目录，完美适配 CI/CD 流水线！)
+```
+---
 
 就到这里吧，后续我会继续更新

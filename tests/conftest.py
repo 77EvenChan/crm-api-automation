@@ -7,20 +7,25 @@ from src.crm_api.core.http_client import HTTPClient, http_client
 from src.crm_api.config.settings import settings
 from src.crm_api.api.auth_api import AuthAPI
 
+
 @pytest.fixture(scope="session", autouse=True)
 def global_mock_server() -> Generator[None, None, None]:
-	"""【拦截器优先启动】确保在所有网络请求前就绪"""
-	log.info("【Mock启动】拦截器已挂载，开启无后端测试模式")
+	log.info("【Mock 启动】拦截器已挂载，开启无后端测试模式")
 	
 	with requests_mock.Mocker() as m:
-		# 登录接口
-		m.post(f"{settings.base_url}/auth/login", json={"code": 0, "msg": "success", "data": {"token": "EvenChan_mock_token_77"}})
-	
-		# 客户管理 - 正向成功
+		# Mock 1: 登录鉴权
+		m.post(
+			f"{settings.base_url}/auth/login",
+			json={"code": 0, "msg": "成功", "data": {"token": "ey_mock_token_8899"}}
+		)
+		
+		# 【工业级最高防御版】Mock 2: 创建成功
 		def match_success(request):
 			try:
-				# 将拦截到的底层报文还原成字典，精准读取字段
-				return request.json().get("customer_name") == "北京字节跳动科技有限公司"
+				body = request.json() or {}
+				# 强转为字符串！哪怕取到了 None 也会变成 "None"，绝对不会触发 not iterable 报错！
+				name = str(body.get("customer_name", ""))
+				return "字节跳动" in name or "生命周期" in name
 			except Exception:
 				return False
 		
@@ -30,10 +35,13 @@ def global_mock_server() -> Generator[None, None, None]:
 			additional_matcher=match_success
 		)
 		
-		# 客户管理 - 逆向重复
+		# 【工业级最高防御版】Mock 3: 创建失败
 		def match_duplicate(request):
 			try:
-				return request.json().get("customer_name") == "重复企业有限公司"
+				body = request.json() or {}
+				# 同理，强转为字符串，消灭一切隐患
+				name = str(body.get("customer_name", ""))
+				return "重复企业" in name
 			except Exception:
 				return False
 		
@@ -43,14 +51,26 @@ def global_mock_server() -> Generator[None, None, None]:
 			additional_matcher=match_duplicate
 		)
 		
+		# Mock 4: 查询客户详情 GET
+		m.get(
+			f"{settings.base_url}/customers/CUST_8839201",
+			json={"code": 0, "msg": "成功",
+			      "data": {"customer_id": "CUST_8839201", "customer_name": "生命周期测试企业"}}
+		)
+		
+		# Mock 5: 删除客户 DELETE
+		m.delete(
+			f"{settings.base_url}/customers/CUST_8839201",
+			json={"code": 0, "msg": "删除成功"}
+		)
+		
 		yield
+
 
 @pytest.fixture(scope="session", autouse=True)
 def auto_auth_session(global_mock_server) -> Generator[HTTPClient, None, None]:
-	"""全局鉴权：依赖Mock启动后再发请求"""
-	log.info("【Fixture启动】开始提取全局Token")
+	log.info("【Fixture 启动】开始提取全局 Token")
 	auth_api = AuthAPI(http_client)
-	
 	try:
 		token = auth_api.login(settings.admin_username, settings.admin_password)
 		http_client.session.headers.update({"Authorization": f"Bearer {token}"})
@@ -59,6 +79,4 @@ def auto_auth_session(global_mock_server) -> Generator[HTTPClient, None, None]:
 		log.error(f"【Fixture 阻断】鉴权失败: {e}")
 	
 	yield http_client
-	
-	log.info("【Fixture销毁】测试会话结束")
 	http_client.session.headers.pop("Authorization", None)
