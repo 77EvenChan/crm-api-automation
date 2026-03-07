@@ -10,6 +10,11 @@ from src.crm_api.api.auth_api import AuthAPI
 
 @pytest.fixture(scope="session", autouse=True)
 def global_mock_server() -> Generator[None, None, None]:
+	# 【开关】：如果配置里关闭了Mock，直接放行将真是请求转成公网
+	if not settings.enable_mock:
+		log.info("【环境切换】Mock拦截器已关闭，当前为真实后端模式！")
+		yield
+		return # 直接退出
 	log.info("【Mock 启动】拦截器已挂载，开启无后端测试模式")
 	
 	with requests_mock.Mocker() as m:

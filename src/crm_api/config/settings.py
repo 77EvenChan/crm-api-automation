@@ -10,6 +10,9 @@ class Settings(BaseSettings):
 	# 日志配置
 	log_level: str = "INFO"
 	
+	# 默认开启Mock模式
+	enable_mock: bool = True
+	
 	# 业务核心账号配置
 	admin_username: str = "admin"
 	admin_password: str = "123456"
